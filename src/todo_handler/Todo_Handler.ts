@@ -3,18 +3,18 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ref, createRef, Ref } from 'lit/directives/ref.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { nanoid } from 'nanoid';
 
+interface Item {
+  id: string;
+  value: string;
+}
 @customElement('my-todo-handler')
 export class MyTodoHandler extends LitElement {
-  @state() words: string[] = [];
+  @state() words: Item[] = [];
 
-  @property({type:String}) color:string ="#f5f5f5";
-
-  firstUpdated(){
-
-
-  }
-
+  @property({ type: String }) color: string = '#f5f5f5';
 
   static styles = css`
     .bloc1 {
@@ -50,8 +50,7 @@ export class MyTodoHandler extends LitElement {
     }
 
     input:hover {
-      background-color: #B16FF3;
-
+      background-color: #b16ff3;
     }
     .ajout-word {
       margin-top: 10px;
@@ -86,7 +85,7 @@ export class MyTodoHandler extends LitElement {
       border-radius: 10px;
     }
     .bloc2::-webkit-scrollbar-thumb {
-      background: #BCBCBC;
+      background: #bcbcbc;
       border-radius: 10px;
       border-color: #707070;
     }
@@ -105,20 +104,36 @@ export class MyTodoHandler extends LitElement {
       margin-bottom: 5px;
       max-width: 90%;
     }
+    .supp {
+      background-color: white;
+      color: #eb6565;
+      border: none;
+    }
+    .supp:hover {
+      color: #970101;
+    }
   `;
 
   inputRef: Ref<HTMLInputElement> = createRef();
 
   append(value: string) {
-    this.words = [...this.words, value]; // Equivalent à push
+    const item: Item = { id: nanoid(), value };
+    this.words = [...this.words, item];
     this.inputRef.value!.value = '';
+  }
+
+  delete(id:string) {
+    const wordsCopy = [...this.words];
+    const _id = wordsCopy.findIndex((value) => value.id ===id)
+    wordsCopy.splice(_id,1);
+    this.words = [...wordsCopy];
   }
 
   render() {
     return html`
       <div class="container">
-        <div class="bloc1" style='background-color : ${this.color}'>
-          <input ${ref(this.inputRef)} />
+        <div class="bloc1" style="background-color : ${this.color}">
+          <input ${ref(this.inputRef)} maxlength="12" />
           <button
             class="ajout-word"
             @click=${() => this.append(this.inputRef.value!.value)}
@@ -127,7 +142,17 @@ export class MyTodoHandler extends LitElement {
           </button>
         </div>
         <div class="bloc2">
-          ${this.words.map(value => html` <p class="word">${value}</p> `)}
+          ${repeat(
+            this.words,
+            word => word.id,
+            value =>
+              html`
+                <p class="word">
+                  ${value.value}
+                  <button class="supp" @click=${()=>this.delete(value.id)}>X</button>
+                </p>
+              `
+          )}
           <!-- Map crée un nouveau tableau avec les résultats de l'appel d'une fonction 
         fournie sur chaque élément du tableau appelant. -->
         </div>
