@@ -11,6 +11,8 @@ export class TodoApp extends LitElement {
 
   @state() isConnected: boolean = false;
 
+  @state() color = '#f5f5f5';
+
   static styles = css`
     * {
       font-family: cursive;
@@ -103,12 +105,12 @@ export class TodoApp extends LitElement {
     svg:hover {
       box-shadow: 0px 3px 8px #707070;
     }
-    .trash{
+    .disconnected {
       display: flex;
       justify-content: center;
-      margin-top:100px;
+      margin-top: 100px;
       font-family: 'Segoe UI';
-      font-size: 20px ;
+      font-size: 20px;
     }
   `;
 
@@ -117,16 +119,17 @@ export class TodoApp extends LitElement {
       <div class="appContainer">
         <div class="choix">
           <div class="couleur">
-            <button class="rouge"></button>
-            <button class="bleu"></button>
-            <button class="vert"></button>
-            <button class="jaune"></button>
+            <button @click=${()=> this.color ="#ff1b1b"} class="rouge"></button>
+            <button @click=${()=> this.color ="#1be8ff"} class="bleu"></button>
+            <button @click=${()=> this.color ="#1bff49"} class="vert"></button>
+            <button @click=${()=> this.color ="#ffef1b"} class="jaune"></button>
           </div>
           <div class="trash">
             <button
               class="bouton"
               @click=${() => {
                 this.isConnected = false;
+                this.color="#f5f5f5"
               }}
             >
               <svg
@@ -221,7 +224,7 @@ export class TodoApp extends LitElement {
           </div>
         </div>
         ${this.isConnected
-          ? html`<my-todo-handler></my-todo-handler>`
+          ? html`<my-todo-handler color=${this.color}></my-todo-handler>`
           : html`<p class="disconnected">The component was disconnected</p>`}
       </div>
     `;

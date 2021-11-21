@@ -8,6 +8,14 @@ import { ref, createRef, Ref } from 'lit/directives/ref.js';
 export class MyTodoHandler extends LitElement {
   @state() words: string[] = [];
 
+  @property({type:String}) color:string ="#f5f5f5";
+
+  firstUpdated(){
+
+
+  }
+
+
   static styles = css`
     .bloc1 {
       border: 0.3px solid rgb(256, 256, 256);
@@ -19,7 +27,7 @@ export class MyTodoHandler extends LitElement {
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 25px;
-      background-color: rgb(252, 252, 252);
+      background-color: #f5f5f5;
       box-shadow: 0px 3px 6px rgb(224, 224, 224);
       border-radius: 20px;
     }
@@ -42,7 +50,8 @@ export class MyTodoHandler extends LitElement {
     }
 
     input:hover {
-      background-color: #b16ff3;
+      background-color: #B16FF3;
+
     }
     .ajout-word {
       margin-top: 10px;
@@ -77,11 +86,9 @@ export class MyTodoHandler extends LitElement {
       border-radius: 10px;
     }
     .bloc2::-webkit-scrollbar-thumb {
-      background: grey;
+      background: #BCBCBC;
       border-radius: 10px;
-    }
-    .bloc2::-webkit-scrollbar-thumb:hover {
-      background: #b30000;
+      border-color: #707070;
     }
     p {
       border: 1px solid rgb(256, 256, 256);
@@ -110,7 +117,7 @@ export class MyTodoHandler extends LitElement {
   render() {
     return html`
       <div class="container">
-        <div class="bloc1">
+        <div class="bloc1" style='background-color : ${this.color}'>
           <input ${ref(this.inputRef)} />
           <button
             class="ajout-word"
