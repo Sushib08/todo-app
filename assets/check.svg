@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31">
+  <g id="Composant_1_1" data-name="Composant 1 – 1">
+    <g id="Ellipse_1" data-name="Ellipse 1" fill="#ff7482" stroke="#ff7482" stroke-width="1">
+      <circle cx="15.5" cy="15.5" r="15.5" stroke="none"/>
+      <circle cx="15.5" cy="15.5" r="15" fill="none"/>
+    </g>
+  </g>
+  <g id="Composant_3_1" data-name="Composant 3 – 1" transform="translate(7.5 16.5)">
+    <line id="Ligne_1" data-name="Ligne 1" x2="8" y2="8" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="3"/>
+  </g>
+  <g id="Composant_2_1" data-name="Composant 2 – 1" transform="translate(15.5 8.5)">
+    <line id="Ligne_2" data-name="Ligne 2" x1="9" y2="16" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="3"/>
+  </g>
+</svg>

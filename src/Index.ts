@@ -3,7 +3,7 @@
 /* eslint-disable import/extensions */
 import { LitElement, html, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import './todo_handler';
+import './TodoHandler';
 
 @customElement('todo-app')
 export class TodoApp extends LitElement {
@@ -11,7 +11,7 @@ export class TodoApp extends LitElement {
 
   @state() isConnected: boolean = false;
 
-  @state() color = '#f5f5f5';// On initialise la couleur
+  @state() color = '#f5f5f5'; // On initialise la couleur
 
   static styles = css`
     * {
@@ -120,7 +120,7 @@ export class TodoApp extends LitElement {
         <div class="choix">
           <div class="couleur">
             <button
-              @click=${() => (this.color = '#ff1b1b')} 
+              @click=${() => (this.color = '#ff1b1b')}
               class="rouge"
             ></button>
             <button
@@ -141,7 +141,7 @@ export class TodoApp extends LitElement {
               class="bouton"
               @click=${() => {
                 this.isConnected = false;
-                this.color = '#f5f5f5';// Cela le réinitialise la couleur quand on appui sur le bouton
+                this.color = '#f5f5f5'; // Cela le réinitialise la couleur quand on appui sur le bouton
               }}
             >
               <svg
