@@ -25,13 +25,15 @@ export class MyTodoHandler extends LitElement {
 
   @state() check: boolean = true;
 
+  checkedCount: number = 0;
+
   static styles = css`
     :host {
       --app-blue: #7494ff;
     }
     .bloc1 {
       border: 0.3px solid rgb(256, 256, 256);
-      width: 330px;
+      width: 335px;
       height: 50px;
       display: flex;
       justify-content: center;
@@ -45,9 +47,9 @@ export class MyTodoHandler extends LitElement {
     }
     div input {
       margin-top: 5px;
-      margin-left : 5px;
+      margin-left: 5px;
       margin-bottom: 5px;
-      width: 230px;
+      width: 240px;
       border: none;
       box-shadow: 0px 3px 6px rgb(224, 224, 224);
       border-radius: 30px;
@@ -86,7 +88,7 @@ export class MyTodoHandler extends LitElement {
       margin-left: 0px;
       border-radius: 50px;
     }
-    img{
+    img {
       border-radius: 150px;
     }
     img:hover {
@@ -95,7 +97,7 @@ export class MyTodoHandler extends LitElement {
     .bloc2 {
       border: rgb(256, 256, 256) solid 1px;
       height: 300px;
-      width: 330px;
+      width: 335px;
       margin: auto;
       background-color: #f5f5f5;
       border-radius: 30px;
@@ -114,11 +116,11 @@ export class MyTodoHandler extends LitElement {
       border-radius: 10px;
       border-color: #707070;
     }
-    p {
+    .text {
       border: 1px solid rgb(256, 256, 256);
       background-color: white;
       height: 43px;
-      width: 280px;
+      width: 300px;
       color: black;
       margin-left: 10px;
       border-radius: 20px;
@@ -127,7 +129,7 @@ export class MyTodoHandler extends LitElement {
       box-shadow: 0px 3px 8px rgb(224, 224, 224);
       margin-top: 15px;
       margin-bottom: 5px;
-      max-width: 90%;
+      max-width: 95%;
     }
     .supp {
       position: absolute;
@@ -192,6 +194,37 @@ export class MyTodoHandler extends LitElement {
       -ms-transform: rotate(45deg);
       transform: rotate(45deg);
     }
+    .bloc3 {
+      display: flex;
+      justify-content: space-between;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+      border: rgb(256, 256, 256) solid 1px;
+      height: 70px;
+      width: 400px;
+      background-color: #f5f5f5cc;
+      border-radius: 30px;
+      box-shadow: 0px 3px 6px rgb(224, 224, 224);
+    }
+    .nbItems {
+      font-size: 15px;
+      max-width: 35%;
+      padding-left: 5px;
+      margin-top: 25px;
+    }
+    strong {
+      color: red;
+    }
+    .clear {
+      border: none;
+      border-radius: 50px;
+      border-color: #f5f5f5;
+      font-size: 15px;
+    }
+    .clear:hover {
+      color: #b16ff3;
+    }
   `;
 
   inputRef: Ref<HTMLInputElement> = createRef();
@@ -206,6 +239,11 @@ export class MyTodoHandler extends LitElement {
     const wordsCopy = [...this.words];
     const _id = wordsCopy.findIndex(value => value.id === id);
     wordsCopy.splice(_id, 1);
+    this.words = [...wordsCopy];
+  }
+
+  deleteAllChecked() {
+    const wordsCopy = this.words.filter(item => item.isDone !== true);
     this.words = [...wordsCopy];
   }
 
@@ -227,6 +265,10 @@ export class MyTodoHandler extends LitElement {
     this.words = [...wordsCopy];
   }
 
+  willUpdate() {
+    this.checkedCount = this.words.filter(item => item.isDone === true).length;
+  }
+
   render() {
     return html`
       <div class="container">
@@ -243,7 +285,7 @@ export class MyTodoHandler extends LitElement {
             +
           </button>
           <button class="done" @click=${this.checkAll}>
-          <img alt="check logo" src=${check}>
+            <img alt="check logo" src=${check} />
           </button>
         </div>
         <div class="bloc2">
@@ -254,6 +296,7 @@ export class MyTodoHandler extends LitElement {
               html`
                 <label class="element">
                   <p
+                    class="text"
                     style="position: relative; text-decoration: ${value.isDone
                       ? 'line-through'
                       : 'none'}; opacity: ${value.isDone ? 0.2 : 1}"
@@ -265,13 +308,30 @@ export class MyTodoHandler extends LitElement {
                       @change=${() => this.checkbox(value.id)}
                     />
                     <span class="checkmark"></span> ${value.value}
-                    <button class="supp" @click=${() => this.delete(value.id)}>
+                    <button
+                      class="supp"
+                      @click=${() => {
+                        this.delete(value.id);
+                      }}
+                    >
                       X
                     </button>
                   </p>
                 </label>
               `
           )}
+        </div>
+        <div class="bloc3">
+          <p class="nbItems">
+            <strong>${this.words.length}</strong> items left
+          </p>
+          <button
+            @click=${this.deleteAllChecked}
+            class="clear"
+            style="opacity: ${this.checkedCount ? 1 : 0}"
+          >
+            Clear completed
+          </button>
         </div>
       </div>
     `;
