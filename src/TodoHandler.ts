@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-sequences */
 /* eslint-disable lit/binding-positions */
 import { LitElement, html, css } from 'lit';
@@ -12,6 +13,7 @@ interface Item {
   id: string;
   value: string;
   isDone: boolean;
+  isHidden: boolean;
 }
 @customElement('my-todo-handler')
 export class MyTodoHandler extends LitElement {
@@ -25,7 +27,7 @@ export class MyTodoHandler extends LitElement {
 
   @state() check: boolean = true;
 
-  checkedCount: number = 0;
+  inputRef: Ref<HTMLInputElement> = createRef();
 
   static styles = css`
     :host {
@@ -196,13 +198,13 @@ export class MyTodoHandler extends LitElement {
     }
     .bloc3 {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
       margin-left: auto;
       margin-right: auto;
       margin-top: 20px;
       border: rgb(256, 256, 256) solid 1px;
       height: 70px;
-      width: 400px;
+      width: 500px;
       background-color: #f5f5f5cc;
       border-radius: 30px;
       box-shadow: 0px 3px 6px rgb(224, 224, 224);
@@ -225,12 +227,24 @@ export class MyTodoHandler extends LitElement {
     .clear:hover {
       color: #b16ff3;
     }
+    .filtres {
+      margin-top: 4%;
+    }
+    .filtre {
+      border: none;
+      font-size: 15px;
+      color: #838080;
+    }
+    .filtre:hover {
+      text-shadow: 0px 3px 8px #707070;
+    }
+    .filtre:focus {
+      border: 2px solid #b16ff3;
+    }
   `;
 
-  inputRef: Ref<HTMLInputElement> = createRef();
-
   append(value: string) {
-    const item: Item = { id: nanoid(), value, isDone: false };
+    const item: Item = { id: nanoid(), value, isDone: false, isHidden: false };
     this.words = [...this.words, item];
     this.inputRef.value!.value = '';
   }
@@ -265,8 +279,36 @@ export class MyTodoHandler extends LitElement {
     this.words = [...wordsCopy];
   }
 
-  willUpdate() {
-    this.checkedCount = this.words.filter(item => item.isDone === true).length;
+  all() {
+    const wordsCopy = this.words.map(item => {
+      item.isHidden = false;
+      return item;
+    });
+    this.words = [...wordsCopy];
+  }
+
+  active() {
+    const wordsCopy = this.words.map(item => {
+      if (item.isDone) {
+        item.isHidden = true;
+        return item;
+      }
+      item.isHidden = false;
+      return item;
+    });
+    this.words = [...wordsCopy];
+  }
+
+  completed() {
+    const wordsCopy = this.words.map(item => {
+      if (item.isDone) {
+        item.isHidden = false;
+        return item;
+      }
+      item.isHidden = true;
+      return item;
+    });
+    this.words = [...wordsCopy];
   }
 
   render() {
@@ -297,9 +339,10 @@ export class MyTodoHandler extends LitElement {
                 <label class="element">
                   <p
                     class="text"
-                    style="position: relative; text-decoration: ${value.isDone
-                      ? 'line-through'
-                      : 'none'}; opacity: ${value.isDone ? 0.2 : 1}"
+                    style="position: relative;
+                    text-decoration: ${value.isDone ? 'line-through' : 'none'};
+                    opacity: ${value.isDone ? 0.2 : 1};
+                    display:${value.isHidden ? 'none' : 'block'}"
                   >
                     <input
                       class="coche"
@@ -325,10 +368,30 @@ export class MyTodoHandler extends LitElement {
           <p class="nbItems">
             <strong>${this.words.length}</strong> items left
           </p>
+          <div class="filtres">
+            <button class="filtre" @click=${this.all}>
+              All <strong>${this.words.length}</strong>
+            </button>
+            <button class="filtre" @click=${this.active}>
+              Active
+              <strong
+                >${this.words.filter(item => item.isDone === false)
+                  .length}</strong
+              >
+            </button>
+            <button class="filtre" @click=${this.completed}>
+              completed
+              <strong
+                >${this.words.filter(item => item.isDone === true)
+                  .length}</strong
+              >
+            </button>
+          </div>
           <button
             @click=${this.deleteAllChecked}
             class="clear"
-            style="opacity: ${this.checkedCount ? 1 : 0}"
+            style="opacity: ${this.words.filter(item => item.isDone === true)
+                  .length ? 1 : 0}"
           >
             Clear completed
           </button>
